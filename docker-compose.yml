@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  publisher:
+    build:
+      context: .
+      dockerfile: publisher/Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis:6379
+
+  subscriber:
+    build:
+      context: .
+      dockerfile: subscriber/Dockerfile
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis:6379
